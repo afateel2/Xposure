@@ -1,0 +1,7 @@
+{
+  "model": "google/gemma-4-31b-it",
+  "path": "systems/icu-200-firmware-config.yaml",
+  "action_id": 6,
+  "created_at": "2026-09-19T15:19:54+00:00",
+  "output": "version: \"1.1\"\nlast_reviewed: \"{{DATE}}\"\nproduct: ICU-200 Industrial Control Unit\nowner: OT Engineering Lead\napplied_regulation: ECC-1:2018\n\nfirmware:\n  release_channel: stable\n  secure_boot: true\n  signing:\n    enabled: true\n    algorithm: rsa-2048-sha256\n    key_storage: hsm\n  rollback_protection: true\n\nmanagement_interface:\n  protocol: https\n  tls_min_version: \"1.2\"\n  local_admin_authentication: password\n  remote_management_mfa: true\n  session_timeout_minutes: 15\n\nfieldbus:\n  protocol: modbus-tcp\n  encrypted: false\n  allowed_hosts:\n    - scada-lite\n    - engineering-workstation\n\nnetwork:\n  default_inbound_action: deny\n  open_ports:\n    - 443\n    - 502\n  diagnostic_port_enabled: false\n  ddos_protection: true\n  note: protect against distributed denial of service attacks per ECC-2:2024 2-5-3-9\n\nlogging:\n  local_event_log: true\n  syslog_forwarding: true\n  retention_days: 365\n\nchange_log:\n  - version: \"1.0\"\n    date: \"2025-11-20\"\n    note: Initial baseline aligned with ECC-1:2018.\n  - version: \"1.1\"\n    date: \"{{DATE}}\"\n    note: Added ddos_protection to comply with ECC-2:2024 control 2-5-3-9."
+}

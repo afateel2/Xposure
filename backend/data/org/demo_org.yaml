@@ -1,0 +1,401 @@
+# Xposure demo organization graph: Eastern Industrial Company
+#
+# A SYNTHETIC industrial electronics manufacturer (Dammam, Eastern Province)
+# that is currently compliant with NCA ECC-1:2018. Not modelled on any real
+# company; every name, reference number and date below is invented. It exists
+# so the impact engine has a realistic graph to traverse and so the demo
+# agent has real company documents to edit.
+#
+# Loaded by:  python -m app.impact --load-org [--replace]
+#
+# The company documents these nodes point at live in
+# backend/data/company_baseline/ (pristine copy) and backend/data/company/
+# (runtime working copy the agent edits). Paths in `attrs.file` and
+# `attrs.config_file` are relative to that directory.
+#
+# Node attributes the company workspace reads:
+#   file          policy / procedure / evidence nodes: the document the agent
+#                 edits for update_policy and update_procedure actions
+#   config_file   product nodes: the settings file the agent edits for
+#                 technical_change actions
+#   doc_type      optional: "procedure" for a policy-type node that is a procedure
+#   email, role   owner nodes
+#
+# Shape: 2 products, 4 processes, 4 policy-type documents (3 policies and 1
+# procedure), 4 owners, 2 evidence items, 1 supplier, 1 site, plus 22 control
+# mappings = 40 nodes.
+#
+# The control_ids are real ECC controls present in the ingested corpus. Three
+# mappings are deliberate special cases that exercise the matching rules in
+# app.impact:
+#
+#   - `2-8-3-1` is mapped at SUBCONTROL depth (4 segments) while every other
+#     mapping sits at control depth (3). A change to its parent `2-8-3` must
+#     still reach it (the "descendant" match).
+#   - `2-2-3` exists as a row only in ECC-2:2024; in ECC-1:2018 only its
+#     children `2-2-3-1..5` were captured. A change to any of those must
+#     reach this mapping (the "ancestor" match).
+#   - `5-1-1` and `5-1-3` exist ONLY in ECC-1:2018. NCA moved the industrial
+#     control systems domain to the separate OTCC document in ECC-2:2024, so
+#     these produce genuine `withdrawn` changes, wired to production line
+#     control, the plant site and the segmentation evidence.
+
+organization:
+  name_en: Eastern Industrial Company
+  name_ar: الشركة الشرقية الصناعية
+  note: Synthetic demo entity. Not a real company.
+
+nodes:
+
+  # Products (2)
+  - key: prod_icu
+    type: product
+    name: ICU-200 Industrial Control Unit
+    attrs:
+      sku: ICU-200
+      line: Industrial Control
+      criticality: high
+      config_file: systems/icu-200-firmware-config.yaml
+
+  - key: prod_scada
+    type: product
+    name: SCADA-Lite Monitoring System
+    attrs:
+      sku: SCADA-LITE
+      line: Monitoring
+      internet_facing: true      # remote dashboard, drives web-application and cloud controls
+      criticality: high
+      config_file: systems/scada-lite-config.yaml
+
+  # Processes (4)
+  - key: proc_prod
+    type: process
+    name: Production Line Control
+    attrs:
+      scope: Assembly, test and calibration cells at Dammam Plant
+      has_ot: true
+      file: procedures/production-line-control-procedure.md
+
+  - key: proc_fw
+    type: process
+    name: Firmware Release Management
+    attrs:
+      scope: Build, signing, testing and release of ICU-200 and SCADA-Lite firmware
+      cadence: quarterly
+
+  - key: proc_vuln
+    type: process
+    name: Vulnerability Management
+    attrs:
+      scope: IT systems, OT systems and shipped products
+
+  - key: proc_supplier
+    type: process
+    name: Supplier Onboarding
+    attrs:
+      scope: Component and service suppliers
+
+  # Policies and procedures (4)
+  - key: pol_isp
+    type: policy
+    name: Information Security Policy
+    attrs:
+      document_ref: POL-001
+      doc_type: policy
+      file: policies/information-security-policy.md
+
+  - key: pol_access
+    type: policy
+    name: Access Control Policy
+    attrs:
+      document_ref: POL-002
+      doc_type: policy
+      file: policies/access-control-policy.md
+
+  - key: pol_crypto
+    type: policy
+    name: Cryptography Policy
+    attrs:
+      document_ref: POL-003
+      doc_type: policy
+      file: policies/cryptography-policy.md
+
+  - key: pol_network
+    type: policy
+    name: Network Security Procedure
+    attrs:
+      document_ref: PRO-001
+      doc_type: procedure
+      file: procedures/network-security-procedure.md
+
+  # Owners (4)
+  - key: own_it
+    type: owner
+    name: IT Security Lead
+    attrs:
+      role: IT Security Lead
+      department: Information Technology
+      email: it.security@eastern-industrial.example
+      escalation_tier: 1
+
+  - key: own_ot
+    type: owner
+    name: OT Engineering Lead
+    attrs:
+      role: OT Engineering Lead
+      department: Manufacturing Engineering
+      email: ot.engineering@eastern-industrial.example
+      escalation_tier: 2
+
+  - key: own_ops
+    type: owner
+    name: Operations Manager
+    attrs:
+      role: Operations Manager
+      department: Operations
+      email: operations@eastern-industrial.example
+      escalation_tier: 2
+
+  - key: own_comp
+    type: owner
+    name: Compliance Officer
+    attrs:
+      role: Compliance Officer
+      department: Governance and Compliance
+      email: compliance@eastern-industrial.example
+      escalation_tier: 1
+
+  # Evidence (2)
+  - key: ev_access_review
+    type: evidence
+    name: Access Review Log
+    attrs:
+      ref: EV-AC-2026-H1
+      collected_at: "2026-06-30"
+      next_due: "2026-12-31"
+      format: review log
+      file: evidence/access-review-log.md
+
+  - key: ev_ot_segmentation
+    type: evidence
+    name: OT Network Segmentation Design
+    attrs:
+      ref: EV-NET-004
+      collected_at: "2026-03-02"
+      next_due: "2027-03-02"
+      format: architecture diagram and firewall ruleset export
+
+  # Supplier (1)
+  - key: sup_components
+    type: supplier
+    name: Electronic Components Supplier
+    attrs:
+      country: SA
+      criticality: high
+      contract_ref: PO-2026-8841
+      supplies: control boards, power modules
+
+  # Site (1)
+  - key: site_dammam
+    type: site
+    name: Dammam Plant
+    attrs:
+      city: Dammam
+      region: Eastern Province
+      has_ot: true
+      classification: restricted
+
+  # Control mappings (22)
+  # `present_in` records which ingested version(s) actually contain the row,
+  # so a reader can tell at a glance why a mapping produces a `withdrawn`
+  # change (5-1-*) or has no ECC-1 row of its own (2-2-3). Status reflects the
+  # company's current assessment against ECC-1:2018.
+  - key: cm_1-3-1
+    type: control_mapping
+    name: "ECC 1-3-1: Cybersecurity policies documented and approved"
+    attrs: {control_id: "1-3-1", status: compliant, assessed_at: "2026-02-20", present_in: [1-2018, 2-2024]}
+
+  - key: cm_1-5-3
+    type: control_mapping
+    name: "ECC 1-5-3: Risk assessment triggers"
+    attrs: {control_id: "1-5-3", status: compliant, assessed_at: "2026-02-20", present_in: [1-2018, 2-2024]}
+
+  - key: cm_1-10-4
+    type: control_mapping
+    name: "ECC 1-10-4: Specialized cybersecurity training"
+    attrs: {control_id: "1-10-4", status: compliant, assessed_at: "2026-02-20", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-1-3
+    type: control_mapping
+    name: "ECC 2-1-3: Acceptable use of assets"
+    attrs: {control_id: "2-1-3", status: compliant, assessed_at: "2026-02-21", present_in: [1-2018, 2-2024]}
+
+  # Present as a row only in ECC-2:2024; in ECC-1:2018 only its children
+  # 2-2-3-1..5 exist. Exercises ANCESTOR matching (a change to 2-2-3-2 must
+  # reach this mapping).
+  - key: cm_2-2-3
+    type: control_mapping
+    name: "ECC 2-2-3: Identity and access management minimum requirements"
+    attrs: {control_id: "2-2-3", status: compliant, assessed_at: "2026-02-21", present_in: [2-2024]}
+
+  - key: cm_2-3-3
+    type: control_mapping
+    name: "ECC 2-3-3: Information systems and processing facilities protection"
+    attrs: {control_id: "2-3-3", status: compliant, assessed_at: "2026-02-21", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-5-3
+    type: control_mapping
+    name: "ECC 2-5-3: Network security minimum requirements"
+    attrs: {control_id: "2-5-3", status: compliant, assessed_at: "2026-03-05", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-7-3
+    type: control_mapping
+    name: "ECC 2-7-3: Data and information protection requirements"
+    attrs: {control_id: "2-7-3", status: compliant, assessed_at: "2026-03-05", present_in: [1-2018, 2-2024]}
+
+  # Mapped at SUBCONTROL depth on purpose: exercises DESCENDANT matching
+  # (a change to 2-8-3, or to the 2-8 subdomain, must reach this mapping).
+  - key: cm_2-8-3-1
+    type: control_mapping
+    name: "ECC 2-8-3-1: Approved cryptographic algorithms and key lengths"
+    attrs: {control_id: "2-8-3-1", status: compliant, assessed_at: "2026-03-05", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-9-3
+    type: control_mapping
+    name: "ECC 2-9-3: Backup and recovery minimum requirements"
+    attrs: {control_id: "2-9-3", status: compliant, assessed_at: "2026-03-06", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-10-3
+    type: control_mapping
+    name: "ECC 2-10-3: Vulnerability management minimum requirements"
+    attrs: {control_id: "2-10-3", status: compliant, assessed_at: "2026-03-06", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-11-3
+    type: control_mapping
+    name: "ECC 2-11-3: Penetration testing minimum requirements"
+    attrs: {control_id: "2-11-3", status: compliant, assessed_at: "2026-03-06", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-12-3
+    type: control_mapping
+    name: "ECC 2-12-3: Event logs and monitoring minimum requirements"
+    attrs: {control_id: "2-12-3", status: compliant, assessed_at: "2026-03-06", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-13-3
+    type: control_mapping
+    name: "ECC 2-13-3: Incident and threat management minimum requirements"
+    attrs: {control_id: "2-13-3", status: compliant, assessed_at: "2026-03-07", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-14-3
+    type: control_mapping
+    name: "ECC 2-14-3: Physical security minimum requirements"
+    attrs: {control_id: "2-14-3", status: compliant, assessed_at: "2026-03-07", present_in: [1-2018, 2-2024]}
+
+  - key: cm_2-15-3
+    type: control_mapping
+    name: "ECC 2-15-3: External web application protection requirements"
+    attrs: {control_id: "2-15-3", status: compliant, assessed_at: "2026-03-07", present_in: [1-2018, 2-2024]}
+
+  - key: cm_3-1-3
+    type: control_mapping
+    name: "ECC 3-1-3: Business continuity cybersecurity requirements"
+    attrs: {control_id: "3-1-3", status: compliant, assessed_at: "2026-03-10", present_in: [1-2018, 2-2024]}
+
+  - key: cm_4-1-2
+    type: control_mapping
+    name: "ECC 4-1-2: Third-party contracts and SLA cybersecurity requirements"
+    attrs: {control_id: "4-1-2", status: compliant, assessed_at: "2026-03-10", present_in: [1-2018, 2-2024]}
+
+  - key: cm_4-1-3
+    type: control_mapping
+    name: "ECC 4-1-3: Third-party IT and managed-service requirements"
+    attrs: {control_id: "4-1-3", status: compliant, assessed_at: "2026-03-10", present_in: [1-2018, 2-2024]}
+
+  - key: cm_4-2-3
+    type: control_mapping
+    name: "ECC 4-2-3: Cloud computing and hosting requirements"
+    attrs: {control_id: "4-2-3", status: compliant, assessed_at: "2026-03-11", present_in: [2-2024]}
+
+  # ECC-1:2018 only. The industrial control systems domain (5) was deleted
+  # wholesale in ECC-2:2024 and moved to the separate OTCC document: a real
+  # `withdrawn` case, and the demo's most interesting impact path.
+  - key: cm_5-1-1
+    type: control_mapping
+    name: "ECC 5-1-1: ICS/OT cybersecurity requirements defined"
+    attrs: {control_id: "5-1-1", status: compliant, assessed_at: "2026-03-11", present_in: [1-2018]}
+
+  - key: cm_5-1-3
+    type: control_mapping
+    name: "ECC 5-1-3: ICS/OT minimum cybersecurity requirements"
+    attrs: {control_id: "5-1-3", status: compliant, assessed_at: "2026-03-11", present_in: [1-2018]}
+
+edges:
+
+  # control_mapping -> the things each control lands on
+  - {from: cm_1-3-1, to: pol_isp, relation: stated_in}
+  - {from: cm_1-3-1, to: own_comp, relation: owned_by}
+  - {from: cm_1-5-3, to: proc_fw, relation: applies_to}
+  - {from: cm_1-5-3, to: own_it, relation: owned_by}
+  - {from: cm_1-10-4, to: own_comp, relation: owned_by}
+  - {from: cm_2-1-3, to: pol_isp, relation: stated_in}
+  - {from: cm_2-2-3, to: pol_access, relation: stated_in}
+  - {from: cm_2-2-3, to: ev_access_review, relation: evidenced_by}
+  - {from: cm_2-2-3, to: own_it, relation: owned_by}
+  - {from: cm_2-3-3, to: prod_scada, relation: applies_to}
+  - {from: cm_2-5-3, to: pol_network, relation: stated_in}
+  - {from: cm_2-5-3, to: proc_prod, relation: applies_to}
+  - {from: cm_2-5-3, to: site_dammam, relation: applies_to}
+  - {from: cm_2-5-3, to: ev_ot_segmentation, relation: evidenced_by}
+  - {from: cm_2-5-3, to: own_it, relation: owned_by}
+  - {from: cm_2-7-3, to: pol_isp, relation: stated_in}
+  - {from: cm_2-7-3, to: prod_icu, relation: applies_to}
+  - {from: cm_2-8-3-1, to: pol_crypto, relation: stated_in}
+  - {from: cm_2-8-3-1, to: prod_icu, relation: applies_to}
+  - {from: cm_2-8-3-1, to: prod_scada, relation: applies_to}
+  - {from: cm_2-8-3-1, to: own_it, relation: owned_by}
+  - {from: cm_2-9-3, to: proc_prod, relation: applies_to}
+  - {from: cm_2-9-3, to: own_ops, relation: owned_by}
+  - {from: cm_2-10-3, to: proc_vuln, relation: applies_to}
+  - {from: cm_2-10-3, to: prod_scada, relation: applies_to}
+  - {from: cm_2-11-3, to: proc_vuln, relation: applies_to}
+  - {from: cm_2-12-3, to: pol_network, relation: stated_in}
+  - {from: cm_2-12-3, to: proc_prod, relation: applies_to}
+  - {from: cm_2-13-3, to: pol_isp, relation: stated_in}
+  - {from: cm_2-13-3, to: own_it, relation: owned_by}
+  - {from: cm_2-14-3, to: site_dammam, relation: applies_to}
+  - {from: cm_2-14-3, to: own_ops, relation: owned_by}
+  - {from: cm_2-15-3, to: prod_scada, relation: applies_to}
+  - {from: cm_3-1-3, to: proc_prod, relation: applies_to}
+  - {from: cm_3-1-3, to: own_ops, relation: owned_by}
+  - {from: cm_4-1-2, to: pol_isp, relation: stated_in}
+  - {from: cm_4-1-2, to: proc_supplier, relation: applies_to}
+  - {from: cm_4-1-3, to: proc_supplier, relation: applies_to}
+  - {from: cm_4-1-3, to: sup_components, relation: applies_to}
+  - {from: cm_4-2-3, to: prod_scada, relation: applies_to}
+  - {from: cm_5-1-1, to: proc_prod, relation: applies_to}
+  - {from: cm_5-1-1, to: own_ot, relation: owned_by}
+  - {from: cm_5-1-3, to: proc_prod, relation: applies_to}
+  - {from: cm_5-1-3, to: site_dammam, relation: applies_to}
+  - {from: cm_5-1-3, to: ev_ot_segmentation, relation: evidenced_by}
+
+  # organization structure (reached at traversal depth 2)
+  - {from: pol_isp, to: proc_prod, relation: governs}
+  - {from: pol_isp, to: proc_vuln, relation: governs}
+  - {from: pol_isp, to: proc_supplier, relation: governs}
+  - {from: pol_access, to: proc_prod, relation: governs}
+  - {from: pol_crypto, to: proc_fw, relation: governs}
+  - {from: pol_network, to: proc_prod, relation: governs}
+  - {from: pol_isp, to: own_it, relation: owned_by}
+  - {from: pol_access, to: own_it, relation: owned_by}
+  - {from: pol_crypto, to: own_it, relation: owned_by}
+  - {from: pol_network, to: own_ot, relation: owned_by}
+  - {from: proc_prod, to: prod_icu, relation: produces}
+  - {from: proc_prod, to: prod_scada, relation: produces}
+  - {from: proc_prod, to: site_dammam, relation: operates_at}
+  - {from: proc_prod, to: own_ops, relation: owned_by}
+  - {from: proc_fw, to: prod_icu, relation: produces}
+  - {from: proc_fw, to: prod_scada, relation: produces}
+  - {from: proc_fw, to: own_ot, relation: owned_by}
+  - {from: proc_vuln, to: own_it, relation: owned_by}
+  - {from: proc_supplier, to: own_comp, relation: owned_by}
+  - {from: sup_components, to: prod_icu, relation: supplies}
+  - {from: sup_components, to: prod_scada, relation: supplies}

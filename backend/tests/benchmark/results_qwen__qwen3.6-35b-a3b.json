@@ -1,0 +1,281 @@
+{
+  "model": "qwen/qwen3.6-35b-a3b",
+  "base_url": "https://openrouter.ai/api/v1",
+  "sample_size": 20,
+  "structured_output_validity_rate": 1.0,
+  "avg_latency_s": 7.02,
+  "labeled_sample_size": 14,
+  "accuracy_on_labeled": 0.643,
+  "per_change_type": {
+    "editorial": {
+      "tp": 0,
+      "total_expected": 2,
+      "total_predicted": 0,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null
+    },
+    "clarification": {
+      "tp": 1,
+      "total_expected": 1,
+      "total_predicted": 4,
+      "precision": 0.25,
+      "recall": 1.0,
+      "f1": 0.4
+    },
+    "relaxed": {
+      "tp": 0,
+      "total_expected": 2,
+      "total_predicted": 0,
+      "precision": null,
+      "recall": 0.0,
+      "f1": null
+    },
+    "tightened": {
+      "tp": 5,
+      "total_expected": 6,
+      "total_predicted": 6,
+      "precision": 0.833,
+      "recall": 0.833,
+      "f1": 0.833
+    },
+    "new_obligation": {
+      "tp": 1,
+      "total_expected": 1,
+      "total_predicted": 2,
+      "precision": 0.5,
+      "recall": 1.0,
+      "f1": 0.667
+    },
+    "withdrawn": {
+      "tp": 2,
+      "total_expected": 2,
+      "total_predicted": 2,
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0
+    }
+  },
+  "results": [
+    {
+      "old_clause_id": "1-1-1",
+      "new_clause_id": "1-1-1",
+      "match_kind": "exact_id",
+      "predicted_change_type": "clarification",
+      "confidence": 0.95,
+      "expected_change_type": "editorial",
+      "correct": false,
+      "latency_s": 19.07,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-2-1",
+      "new_clause_id": "1-2-1",
+      "match_kind": "exact_id",
+      "predicted_change_type": "clarification",
+      "confidence": 0.85,
+      "expected_change_type": "editorial",
+      "correct": false,
+      "latency_s": 24.48,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-6-3-3",
+      "new_clause_id": "1.6.3.3",
+      "match_kind": "exact_id",
+      "predicted_change_type": "clarification",
+      "confidence": 0.9,
+      "expected_change_type": "relaxed",
+      "correct": false,
+      "latency_s": 7.78,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-9-3-2",
+      "new_clause_id": "1.9.3.2",
+      "match_kind": "exact_id",
+      "predicted_change_type": "tightened",
+      "confidence": 0.9,
+      "expected_change_type": "relaxed",
+      "correct": false,
+      "latency_s": 3.57,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "2-2-3-1",
+      "new_clause_id": "2-2-3-1",
+      "match_kind": "exact_id",
+      "predicted_change_type": "clarification",
+      "confidence": 0.85,
+      "expected_change_type": "clarification",
+      "correct": true,
+      "latency_s": 3.02,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "2-2-3-2",
+      "new_clause_id": "2-2-3-2",
+      "match_kind": "exact_id",
+      "predicted_change_type": "tightened",
+      "confidence": 0.95,
+      "expected_change_type": "tightened",
+      "correct": true,
+      "latency_s": 3.06,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "2-4-3-2",
+      "new_clause_id": "2-4-3-2",
+      "match_kind": "exact_id",
+      "predicted_change_type": "tightened",
+      "confidence": 0.9,
+      "expected_change_type": "tightened",
+      "correct": true,
+      "latency_s": 6.06,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "2-4-3-5",
+      "new_clause_id": "2-4-3-5",
+      "match_kind": "exact_id",
+      "predicted_change_type": "tightened",
+      "confidence": 0.95,
+      "expected_change_type": "tightened",
+      "correct": true,
+      "latency_s": 2.93,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "2-7-2",
+      "new_clause_id": "2-7-2",
+      "match_kind": "exact_id",
+      "predicted_change_type": "tightened",
+      "confidence": 0.9,
+      "expected_change_type": "tightened",
+      "correct": true,
+      "latency_s": 8.3,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "2-15-3-5",
+      "new_clause_id": "2-15-3-5",
+      "match_kind": "exact_id",
+      "predicted_change_type": "tightened",
+      "confidence": 0.9,
+      "expected_change_type": "tightened",
+      "correct": true,
+      "latency_s": 3.47,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "4-2-3-1",
+      "new_clause_id": "4-2-3-1",
+      "match_kind": "exact_id",
+      "predicted_change_type": "new_obligation",
+      "confidence": 0.95,
+      "expected_change_type": "tightened",
+      "correct": false,
+      "latency_s": 4.92,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "5-1",
+      "new_clause_id": null,
+      "match_kind": "withdrawn",
+      "predicted_change_type": "withdrawn",
+      "confidence": 1.0,
+      "expected_change_type": "withdrawn",
+      "correct": true,
+      "latency_s": 2.97,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "5-1-3-8",
+      "new_clause_id": null,
+      "match_kind": "withdrawn",
+      "predicted_change_type": "withdrawn",
+      "confidence": 1.0,
+      "expected_change_type": "withdrawn",
+      "correct": true,
+      "latency_s": 2.95,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": null,
+      "new_clause_id": "2-5-3-9",
+      "match_kind": "new",
+      "predicted_change_type": "new_obligation",
+      "confidence": 0.95,
+      "expected_change_type": "new_obligation",
+      "correct": true,
+      "latency_s": 3.09,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-1",
+      "new_clause_id": "1-1",
+      "match_kind": "exact_id",
+      "predicted_change_type": "editorial",
+      "confidence": 0.95,
+      "expected_change_type": null,
+      "correct": null,
+      "latency_s": 2.84,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-1-2",
+      "new_clause_id": "1-1-2",
+      "match_kind": "exact_id",
+      "predicted_change_type": "clarification",
+      "confidence": 0.9,
+      "expected_change_type": null,
+      "correct": null,
+      "latency_s": 6.68,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-1-3",
+      "new_clause_id": "1-1-3",
+      "match_kind": "exact_id",
+      "predicted_change_type": "clarification",
+      "confidence": 0.95,
+      "expected_change_type": null,
+      "correct": null,
+      "latency_s": 4.2,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-2",
+      "new_clause_id": "1-2",
+      "match_kind": "exact_id",
+      "predicted_change_type": "editorial",
+      "confidence": 0.8,
+      "expected_change_type": null,
+      "correct": null,
+      "latency_s": 13.62,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-2-2",
+      "new_clause_id": "1-2-2",
+      "match_kind": "exact_id",
+      "predicted_change_type": "tightened",
+      "confidence": 0.9,
+      "expected_change_type": null,
+      "correct": null,
+      "latency_s": 7.58,
+      "status": "OK"
+    },
+    {
+      "old_clause_id": "1-2-3",
+      "new_clause_id": "1-2-3",
+      "match_kind": "exact_id",
+      "predicted_change_type": "clarification",
+      "confidence": 0.85,
+      "expected_change_type": null,
+      "correct": null,
+      "latency_s": 9.89,
+      "status": "OK"
+    }
+  ]
+}

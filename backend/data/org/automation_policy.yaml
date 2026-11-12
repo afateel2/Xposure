@@ -1,0 +1,74 @@
+# Automation policy — how much of each recommended action Xposure may do
+# without a human (M5, see backend/app/policy.py).
+#
+# READ THIS BEFORE EDITING
+# ------------------------
+# This file can only ever make Xposure MORE cautious than the hard gates
+# in app/policy.py, never less. Those gates are `if` statements in code,
+# not configuration, precisely so that a bad edit here cannot switch on
+# unsupervised automation the project has decided must never happen:
+#
+#   * Only `clarification` and `editorial` changes may ever auto_execute.
+#   * A `new_obligation` always goes to a human, and always as a tracked
+#     approve/dismiss decision (never a bare notification).
+#   * Classification confidence below 0.7 always goes to a human.
+#   * Only `collect_evidence` and `notify_owner` are auto-executable
+#     action types at all, whatever this file says.
+#
+# So writing `auto_execute` below is a REQUEST, granted only when every
+# gate agrees. Writing `notify_only` is always honored — you can always
+# ask for less automation, never for more.
+#
+# Levels, least to most automation:
+#   notify_only        tell the owner; Xposure does nothing else and
+#                      opens no action item to chase.
+#   draft_then_approve Xposure prepares the action and a human approves or
+#                      dismisses it. Nothing takes effect unapproved.
+#                      This is the project default (takeoff prompt s.3/M5).
+#   auto_execute       Xposure performs it and records it in the audit log.
+
+version: 1
+
+# Applied to any action type not named in action_levels below. Kept at the
+# takeoff prompt's stated default so that adding a new action type to the
+# vocabulary fails safe rather than silently inheriting someone's
+# auto_execute.
+default_level: draft_then_approve
+
+# Per action type, for the fixed action vocabulary (takeoff prompt s.3/M4).
+action_levels:
+
+  # A policy is an approved, versioned governance artifact; editing one
+  # without sign-off defeats the control it documents.
+  update_policy: draft_then_approve
+
+  # Same reasoning one level down: a procedure is still a controlled
+  # document with an owner who answers for it in an audit.
+  update_procedure: draft_then_approve
+
+  # A configuration change to a production system in a defense
+  # manufacturing environment goes through the organization's own change
+  # management, not through us. Xposure's job here is to tell the owner
+  # what the regulator now requires; the engineering decision is theirs.
+  # (app/policy.py also refuses to auto-execute this type outright.)
+  technical_change: notify_only
+
+  # Additive and reversible: gathering an artifact and attaching it to a
+  # control asserts nothing and breaks nothing. The one action type where
+  # unsupervised execution is genuinely low-risk, so it is the main reason
+  # auto_execute exists at all.
+  collect_evidence: auto_execute
+
+  # Changing a control's assessed status is a compliance assertion of
+  # record — the thing an auditor or regulator relies on. A human owns it.
+  reassess_control: draft_then_approve
+
+  # Worst case is an unnecessary email. Safe to automate, and the value of
+  # the whole product is that the right person hears about a change in
+  # days instead of weeks.
+  notify_owner: auto_execute
+
+  # An outbound interaction with an authority (GAMI, NCA). A human decides
+  # when this organization approaches its regulator.
+  # (app/policy.py also refuses to auto-execute this type outright.)
+  request_license_review: notify_only

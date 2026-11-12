@@ -1,0 +1,43 @@
+/**
+ * Curated Lucide icon set used across the app (design system: Lucide, stroke 2).
+ * Import from "@/components/ui" and render with <Icon icon={Search} />.
+ * Need another glyph? Import it from "lucide-react" directly, the same wrapper works.
+ */
+export {
+  ArrowLeft,
+  ArrowRight,
+  Bell,
+  Bot,
+  Building2,
+  Check,
+  CircleAlert,
+  CircleCheck,
+  CircleX,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardCheck,
+  Clock,
+  ExternalLink,
+  FileDiff,
+  FileText,
+  FlaskConical,
+  Globe,
+  History,
+  Info,
+  LayoutDashboard,
+  ListChecks,
+  LoaderCircle,
+  Menu,
+  Moon,
+  Play,
+  RefreshCw,
+  ScanLine,
+  Search,
+  Settings,
+  ShieldCheck,
+  Sun,
+  TriangleAlert,
+  TrendingUp,
+  Undo2,
+  X,
+} from "lucide-react";

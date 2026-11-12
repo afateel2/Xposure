@@ -1,0 +1,36 @@
+# Env / secrets
+.env
+.env.local
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+
+# Node / Next.js
+node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/tsconfig.tsbuildinfo
+
+# Data (large, not committed — see backend/data/README.md)
+backend/data/sources/**/*.pdf
+backend/data/portal_mirror/**/*.pdf
+backend/data/cache/
+
+# Demo company runtime working copy (created from backend/data/company_baseline/
+# on first use or on reset; holds the agent's edits and version history)
+backend/data/company/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+
+

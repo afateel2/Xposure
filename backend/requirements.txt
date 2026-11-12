@@ -1,0 +1,34 @@
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+pydantic>=2.9.0
+pydantic-settings>=2.5.0
+python-dotenv>=1.0.0
+
+# Data layer
+sqlalchemy>=2.0.35
+alembic>=1.13.2
+psycopg[binary]>=3.2.0
+pyyaml>=6.0.2  # only ever transitively pulled in before M4/M5 (via langgraph/sentence-transformers) — used directly now (policy.py, demo_org.yaml loader), so declared explicitly
+
+# Regulation ingestion / retrieval (ported from ComplyX)
+pymupdf>=1.24.0
+qdrant-client>=1.18.0
+sentence-transformers>=3.3.0
+
+# LLM: single OpenAI-compatible client, pointed at Ollama (local, final) or
+# OpenRouter (cloud, dev/benchmark only) via LLM_BASE_URL — see docs/PLAN.md section 3.
+openai>=1.50.0
+
+# Agent loop (M6)
+langgraph>=0.2.0
+langgraph-checkpoint-postgres>=2.0.0
+apscheduler>=3.10.4
+
+# Exports (M8)
+playwright>=1.40
+openpyxl>=3.1.0
+httpx>=0.27.0
+
+# Testing
+pytest>=8.3.0

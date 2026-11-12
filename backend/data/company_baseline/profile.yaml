@@ -1,0 +1,22 @@
+name_en: Eastern Industrial Company
+name_ar: الشركة الشرقية الصناعية
+sector_en: Industrial electronics manufacturing
+sector_ar: تصنيع الإلكترونيات الصناعية
+location_en: Dammam, Eastern Province, Saudi Arabia
+location_ar: الدمام، المنطقة الشرقية، المملكة العربية السعودية
+site: Dammam Plant
+applied_regulation: ECC-1:2018
+employees: 340
+products:
+  - name: ICU-200 Industrial Control Unit
+    sku: ICU-200
+    description_en: Programmable industrial control unit for production lines
+    description_ar: وحدة تحكم صناعية قابلة للبرمجة لخطوط الإنتاج
+  - name: SCADA-Lite Monitoring System
+    sku: SCADA-LITE
+    description_en: Plant floor monitoring system with a remote dashboard
+    description_ar: نظام مراقبة لأرضية المصنع مع لوحة متابعة عن بُعد
+regulators_tracked:
+  - code: nca
+    name_en: National Cybersecurity Authority
+    name_ar: الهيئة الوطنية للأمن السيبراني

@@ -1,0 +1,45 @@
+version: "1.0"
+last_reviewed: "2025-11-20"
+product: ICU-200 Industrial Control Unit
+owner: OT Engineering Lead
+applied_regulation: ECC-1:2018
+
+firmware:
+  release_channel: stable
+  secure_boot: true
+  signing:
+    enabled: true
+    algorithm: rsa-2048-sha256
+    key_storage: hsm
+  rollback_protection: true
+
+management_interface:
+  protocol: https
+  tls_min_version: "1.2"
+  local_admin_authentication: password
+  remote_management_mfa: true
+  session_timeout_minutes: 15
+
+fieldbus:
+  protocol: modbus-tcp
+  encrypted: false
+  allowed_hosts:
+    - scada-lite
+    - engineering-workstation
+
+network:
+  default_inbound_action: deny
+  open_ports:
+    - 443
+    - 502
+  diagnostic_port_enabled: false
+
+logging:
+  local_event_log: true
+  syslog_forwarding: true
+  retention_days: 365
+
+change_log:
+  - version: "1.0"
+    date: "2025-11-20"
+    note: Initial baseline aligned with ECC-1:2018.

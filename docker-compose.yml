@@ -1,0 +1,94 @@
+# Infra only — Postgres + Qdrant. Backend/frontend run natively via
+# `make dev` / start.ps1 / start.sh, not as containers (see docs/PLAN.md M1).
+#
+# Ollama is deliberately NOT a service here yet: per docs/PLAN.md section 3,
+# dev/benchmarking currently runs against a cloud OpenAI-compatible endpoint
+# (LLM_BASE_URL in .env) instead of a local model. When the team is ready to
+# run locally, add a profile-gated `ollama` service here rather than making
+# it a hard dependency of every `docker compose up`.
+
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - "5442:5432"
+    environment:
+      - POSTGRES_USER=xposure
+      - POSTGRES_PASSWORD=xposure
+      - POSTGRES_DB=xposure
+    volumes:
+      - xposure_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U xposure"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "6343:6333"
+      - "6344:6334"
+    volumes:
+      - xposure_qdrant:/qdrant/storage
+
+  # ── Optional demo ERP: Odoo 17 (profile "odoo") ─────────────────────────
+  # NOT started by a plain `docker compose up`. Start it explicitly:
+  #   docker compose --profile odoo up -d odoo-db odoo
+  # Official library images only (odoo:17.0 and postgres:16 from Docker
+  # Hub), no third-party modules. Odoo is published on 127.0.0.1:8069 only;
+  # its own Postgres (odoo-db) has NO host port and is separate from the
+  # `postgres` service above, so it never touches Xposure's data.
+  # First-time database init (once, see backend/scripts/odoo_seed.py):
+  #   docker compose --profile odoo run --rm odoo odoo -d xposure_erp \
+  #     -i project,hr --without-demo=all --load-language=ar_001 --stop-after-init
+  # Credentials come from .env (ODOO_DB_PASSWORD for the container Postgres,
+  # ODOO_PASSWORD for the Odoo admin login); see .env.example for the
+  # placeholders. Local demo use only.
+  # REMOVAL (stops Odoo and deletes its database and filestore volumes):
+  #   docker compose --profile odoo down -v
+  odoo-db:
+    profiles: ["odoo"]
+    image: postgres:16
+    # No "ports:" on purpose: only the odoo container can reach it.
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=${ODOO_DB_PASSWORD:-odoo_local_demo_change_me}
+      - POSTGRES_DB=postgres
+    volumes:
+      - xposure_odoo_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  odoo:
+    profiles: ["odoo"]
+    image: odoo:17.0
+    depends_on:
+      odoo-db:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8069:8069"
+    environment:
+      - HOST=odoo-db
+      - USER=odoo
+      - PASSWORD=${ODOO_DB_PASSWORD:-odoo_local_demo_change_me}
+    # Pin the database and switch the database manager off
+    # (--no-database-list disables /web/database/*).
+    command: odoo -d xposure_erp --db-filter=^xposure_erp$$ --no-database-list
+    volumes:
+      - xposure_odoo_data:/var/lib/odoo
+    healthcheck:
+      test: ["CMD-SHELL", "python3 -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8069/web/health', timeout=4)\""]
+      interval: 15s
+      timeout: 8s
+      retries: 10
+      start_period: 60s
+
+volumes:
+  xposure_postgres:
+  xposure_qdrant:
+  xposure_odoo_db:
+  xposure_odoo_data:

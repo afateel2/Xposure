@@ -1,0 +1,10 @@
+Control Reference Number,Compliance Level,Responsible Party,Evidence Reference,Notes
+2-5-3,Partially Compliant,OT Engineering,EV-NET-004,Segmentation rollout in progress
+2-5-3-1,Compliant,OT Engineering,EV-NET-004,
+2-8-3-1,Not Compliant,CISO Office,,Algorithm inventory not started
+2-11-3,Compliant,CISO Office,EV-PT-2025,Annual test completed
+2-2-3,ملتزم جزئيا,CISO Office,EV-AC-2026-H1,Bilingual status value
+4-1-3,Not Applicable,Procurement,,No managed IT services in scope
+,,,,
+2-5-3,Compliant,Duplicate Owner,EV-DUP,Duplicate control row - first occurrence wins
+Main Domain 2,,,,Section heading row - not a control code

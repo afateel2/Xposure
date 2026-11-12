@@ -1,0 +1,50 @@
+version: "1.0"
+last_reviewed: "2025-11-20"
+system: SCADA-Lite Monitoring System
+owner: OT Engineering Lead
+applied_regulation: ECC-1:2018
+
+network:
+  zone: ot-production
+  remote_dashboard_zone: dmz
+  firewall_default_action: deny
+  allowed_inbound:
+    - source: corporate
+      port: 443
+      protocol: https
+    - source: dmz
+      port: 443
+      protocol: https
+  internet_access: false
+  intrusion_prevention: true
+
+authentication:
+  method: username_password
+  password_min_length: 12
+  mfa_remote_access: true
+  mfa_privileged_accounts: false
+  session_timeout_minutes: 30
+  lockout_attempts: 5
+
+encryption:
+  remote_dashboard:
+    protocol: tls
+    min_version: "1.2"
+  plc_polling:
+    encrypted: false
+    note: Industrial protocol traffic stays inside the segmented OT network
+  historian_database:
+    encrypted_at_rest: false
+  backups:
+    encrypted_at_rest: true
+
+logging:
+  enabled: true
+  destination: central-log-platform
+  retention_days: 365
+  log_privileged_sessions: true
+
+change_log:
+  - version: "1.0"
+    date: "2025-11-20"
+    note: Initial baseline aligned with ECC-1:2018.
